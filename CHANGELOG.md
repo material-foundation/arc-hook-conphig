@@ -1,3 +1,6 @@
-# release-candidate
+# 1.0.0
 
- TODO: Enumerate changes.
+- Initial release.
+- Supports post-workflow commands.
+
+Only post-diff has been tested.
