@@ -49,6 +49,12 @@ configuration (without a path):
       ]
     }
 
+### Set the Configuration
+
+Add the following setting to your project's `.arcconfig`:
+
+    "arcanist_configuration" : "HookConphig",
+
 ## Usage
 
 Create a `.arc-hooks` directory in the root of your project. This directory will contain all of your
