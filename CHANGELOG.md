@@ -1,6 +1,8 @@
-# release-candidate
+# 1.0.1
 
- TODO: Enumerate changes.
+- Remove proselint.
+- Add note about setting the arcanist_configuration property.
+
 # 1.0.0
 
 - Initial release.
