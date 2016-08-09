@@ -19,8 +19,6 @@
 # Hookable arcanist configuration.
 #
 class HookConphig extends ArcanistConfiguration {
-  
-  const HOOK_DIR = '.arc-hooks';
 
   # Post-workflow hooks
   public function didRunWorkflow($command, ArcanistWorkflow $workflow, $err) {
@@ -31,19 +29,11 @@ class HookConphig extends ArcanistConfiguration {
         return;
       }
 
-      $dir = $workflow->getRepositoryAPI()->getPath().self::HOOK_DIR."/post-$workflowName";
-      if (!file_exists($dir)) {
-        return;
-      }
-      foreach (scandir($dir) as $path) {
-        if (substr($path, 0, 1) == '.') {
-          continue;
-        }
-        $subdir = "$dir/$path/src";
-        foreach (scandir($subdir) as $subpath) {
-          if (endsWith($subpath, 'ArcanistHook.php')) {
-            $class = substr($subpath, 0, strlen($subpath) - 4);
-            if (class_exists($class)) {
+      foreach (PhutilBootloader::getInstance()->getAllLibraries() as $library) {
+        $libraryMap = PhutilBootloader::getInstance()->getLibraryMap($library);
+        foreach ($libraryMap['class'] as $class => $path) {
+          if (method_exists($class, 'hookType')) {
+            if ($class::hookType() == "post-$workflowName") {
               $hook = new $class();
               $hook->doHook($workflow);
             }
@@ -52,10 +42,6 @@ class HookConphig extends ArcanistConfiguration {
       }
     }
   }
-}
-
-function endsWith($haystack, $needle) {
-  return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
 }
 
 ?>
